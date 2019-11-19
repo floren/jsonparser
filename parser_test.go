@@ -1467,6 +1467,7 @@ func TestEachKey(t *testing.T) {
 		{"arrInt", "[3]"},
 		{"arrString", "[1]"},
 		{"arrInt", "[5]"}, // Should not find last key
+		{"nested"},
 	}
 
 	keysFound := 0
@@ -1511,13 +1512,19 @@ func TestEachKey(t *testing.T) {
 			if string(value) != "b" {
 				t.Error("Should find 9 key", string(value))
 			}
+		case 9:
+			t.Errorf("Found key idx 9 that should not be found")
+		case 10:
+			if string(value) != `{"a":"test", "b":2, "nested3":{"a":"test3","b":4}, "c": "unknown"}` {
+				t.Error("Should find 10 key", string(value))
+			}
 		default:
-			t.Errorf("Should found only 9 keys")
+			t.Errorf("Should find only 10 keys, got %v key", idx)
 		}
 	}, paths...)
 
-	if keysFound != 9 {
-		t.Errorf("Should find 9 keys: %d", keysFound)
+	if keysFound != 10 {
+		t.Errorf("Should find 10 keys: %d", keysFound)
 	}
 }
 
